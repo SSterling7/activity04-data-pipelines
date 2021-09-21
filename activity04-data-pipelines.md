@@ -87,15 +87,6 @@ you might see in documents:
 college_recent_grads <- readr::read_csv("data/recent-grads.csv")
 ```
 
-    ## 
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## cols(
-    ##   .default = col_double(),
-    ##   major = col_character(),
-    ##   major_category = col_character()
-    ## )
-    ## ℹ Use `spec()` for the full column specifications.
-
 Notice that this dataset is in a folder called `data`. We read it in
 with the `read_csv` function, then saved the results as a new data frame
 called `college_recent_grads`. You can view the entire dataset by
@@ -105,7 +96,7 @@ sure you have run both the `load_packages` and `load_data` code chunks).
 Explore and describe what the `message` option does in `load_data` code
 chunk.
 
-**Response**:
+**Response**: describes type of data for each column
 
 Turn the `message` option off and continue in this activity.
 
@@ -146,6 +137,29 @@ Below is a blank R code chunk. Name this code chunk `college_grads_top`;
 you do not need to suppress messages. In this code chunk, type
 `college_recent_grads` to view the top few (first 10) entries of the
 dataset.
+
+``` r
+college_recent_grads
+```
+
+    ## # A tibble: 173 x 21
+    ##     rank major_code major           major_category total sample_size   men women
+    ##    <dbl>      <dbl> <chr>           <chr>          <dbl>       <dbl> <dbl> <dbl>
+    ##  1     1       2419 Petroleum Engi… Engineering     2339          36  2057   282
+    ##  2     2       2416 Mining And Min… Engineering      756           7   679    77
+    ##  3     3       2415 Metallurgical … Engineering      856           3   725   131
+    ##  4     4       2417 Naval Architec… Engineering     1258          16  1123   135
+    ##  5     5       2405 Chemical Engin… Engineering    32260         289 21239 11021
+    ##  6     6       2418 Nuclear Engine… Engineering     2573          17  2200   373
+    ##  7     7       6202 Actuarial Scie… Business        3777          51  2110  1667
+    ##  8     8       5001 Astronomy And … Physical Scie…  1792          10   832   960
+    ##  9     9       2414 Mechanical Eng… Engineering    91227        1029 80320 10907
+    ## 10    10       2408 Electrical Eng… Engineering    81527         631 65511 16016
+    ## # … with 163 more rows, and 13 more variables: sharewomen <dbl>,
+    ## #   employed <dbl>, employed_fulltime <dbl>, employed_parttime <dbl>,
+    ## #   employed_fulltime_yearround <dbl>, unemployed <dbl>,
+    ## #   unemployment_rate <dbl>, p25th <dbl>, median <dbl>, p75th <dbl>,
+    ## #   college_jobs <dbl>, non_college_jobs <dbl>, low_wage_jobs <dbl>
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any
 questions, contact your instructor. Otherwise feel free to continue on.
@@ -204,7 +218,8 @@ or simply a general process. You do not need to code anything. As you
 write this process, think of it as a series of steps and it might be
 helpful to start at the goal and work backwards.
 
-**Response**:
+**Response**: Only need major and unemployment rate. I would just sort
+by ascending order. So filter and sort?
 
 #### Using `{dplyr}`
 
@@ -212,6 +227,30 @@ In the R code chunk below, name it `rearrange_college`.
 
 Take the `college_recent_grads` dataset, *then* `arrange` the dataset by
 `unemployment_rate`.
+
+``` r
+college_recent_grads %>% 
+  arrange(desc(unemployment_rate))
+```
+
+    ## # A tibble: 173 x 21
+    ##     rank major_code major         major_category   total sample_size   men women
+    ##    <dbl>      <dbl> <chr>         <chr>            <dbl>       <dbl> <dbl> <dbl>
+    ##  1     6       2418 Nuclear Engi… Engineering       2573          17  2200   373
+    ##  2    90       5401 Public Admin… Law & Public Po…  5629          46  2947  2682
+    ##  3    85       2107 Computer Net… Computers & Mat…  7613          97  5291  2322
+    ##  4   171       5202 Clinical Psy… Psychology & So…  2838          13   568  2270
+    ##  5    30       5402 Public Policy Law & Public Po…  5978          55  2639  3339
+    ##  6   106       2001 Communicatio… Computers & Mat… 18035         208 11431  6604
+    ##  7     2       2416 Mining And M… Engineering        756           7   679    77
+    ##  8    54       2101 Computer Pro… Computers & Mat…  4168          43  3046  1122
+    ##  9    80       5504 Geography     Social Science   18480         179 11404  7076
+    ## 10    59       1401 Architecture  Engineering      46420         362 25463 20957
+    ## # … with 163 more rows, and 13 more variables: sharewomen <dbl>,
+    ## #   employed <dbl>, employed_fulltime <dbl>, employed_parttime <dbl>,
+    ## #   employed_fulltime_yearround <dbl>, unemployed <dbl>,
+    ## #   unemployment_rate <dbl>, p25th <dbl>, median <dbl>, p75th <dbl>,
+    ## #   college_jobs <dbl>, non_college_jobs <dbl>, low_wage_jobs <dbl>
 
 We have all of the information to answer our question (i.e., “Which
 major has the lowest unemployment rate?”), but it is not in an effective
@@ -229,7 +268,28 @@ the start to this solution, **then** `select` only the variables `rank`,
 `major`, and `unemployment_rate`. Name this code chunk
 `lowest_unemploy`.
 
-**Response**:
+``` r
+college_recent_grads %>% 
+  arrange(desc(unemployment_rate)) %>% 
+  select(rank, major, unemployment_rate)
+```
+
+    ## # A tibble: 173 x 3
+    ##     rank major                                      unemployment_rate
+    ##    <dbl> <chr>                                                  <dbl>
+    ##  1     6 Nuclear Engineering                                    0.177
+    ##  2    90 Public Administration                                  0.159
+    ##  3    85 Computer Networking And Telecommunications             0.152
+    ##  4   171 Clinical Psychology                                    0.149
+    ##  5    30 Public Policy                                          0.128
+    ##  6   106 Communication Technologies                             0.120
+    ##  7     2 Mining And Mineral Engineering                         0.117
+    ##  8    54 Computer Programming And Data Processing               0.114
+    ##  9    80 Geography                                              0.113
+    ## 10    59 Architecture                                           0.113
+    ## # … with 163 more rows
+
+**Response**: nice
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any
 questions, contact your instructor. Otherwise feel free to continue on.
@@ -240,9 +300,31 @@ Using the `college_recent_grads` dataset and functions from `{dplyr}`,
 `arrange` the dataset by `sharewomen`, and `select` only `rank`,
 `major`, and `sharewomen`. Name your code chunk `highest_prop_women`.
 
+``` r
+college_recent_grads %>% 
+  arrange(desc(sharewomen)) %>% 
+  select(rank, major, sharewomen)
+```
+
+    ## # A tibble: 173 x 3
+    ##     rank major                                         sharewomen
+    ##    <dbl> <chr>                                              <dbl>
+    ##  1   165 Early Childhood Education                          0.969
+    ##  2   164 Communication Disorders Sciences And Services      0.968
+    ##  3    52 Medical Assisting Services                         0.928
+    ##  4   139 Elementary Education                               0.924
+    ##  5   151 Family And Consumer Sciences                       0.911
+    ##  6   101 Special Needs Education                            0.907
+    ##  7   157 Human Services And Community Organization          0.906
+    ##  8   152 Social Work                                        0.904
+    ##  9    35 Nursing                                            0.896
+    ## 10    89 Miscellaneous Health Medical Professions           0.881
+    ## # … with 163 more rows
+
 Discuss your output as it relates to the research question.
 
-**Response**:
+**Response**: Early Childhood Education has the highest proportion of
+women.
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any
 questions, contact your instructor. Otherwise feel free to continue on.
@@ -272,6 +354,27 @@ for all majors is $36,000 to *keep* the rows in the
 *less* than the `median` salary of all majors. Only display the
 variables `major`, `p25th`, `median`, and `p75th` Name the code chunk
 `stem_low_salaries`.
+
+``` r
+college_recent_grads %>% 
+  filter(major_category %in% stem_categories) %>% 
+  filter(median < 36000) %>% 
+  select(major, p25th, median, p75th)
+```
+
+    ## # A tibble: 10 x 4
+    ##    major                                 p25th median p75th
+    ##    <chr>                                 <dbl>  <dbl> <dbl>
+    ##  1 Environmental Science                 25000  35600 40200
+    ##  2 Multi-Disciplinary Or General Science 24000  35000 50000
+    ##  3 Physiology                            20000  35000 50000
+    ##  4 Communication Technologies            25000  35000 45000
+    ##  5 Neuroscience                          30000  35000 44000
+    ##  6 Atmospheric Sciences And Meteorology  28000  35000 50000
+    ##  7 Miscellaneous Biology                 23000  33500 48000
+    ##  8 Biology                               24000  33400 45000
+    ##  9 Ecology                               23000  33000 42000
+    ## 10 Zoology                               20000  26000 39000
 
 Discuss your output as it relates to the research question.
 
